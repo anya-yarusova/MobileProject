@@ -1,4 +1,4 @@
-package com.anyarusova.smarthouse
+package com.anyarusova.smarthouse.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,14 +18,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.anyarusova.smarthouse.model.CameraDevice
+import com.anyarusova.smarthouse.model.DeviceType
+import com.anyarusova.smarthouse.model.LightDevice
+import com.anyarusova.smarthouse.model.SmartDevice
+import com.anyarusova.smarthouse.model.ThermostatDevice
 
 @Composable
 fun AddDeviceScreen(onAddDevice: (SmartDevice) -> Unit, onCancel: () -> Unit) {
     var name by remember { mutableStateOf("") }
-    var type by remember { mutableStateOf("") }
+    var type by remember { mutableStateOf(DeviceType.LIGHT) }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(text = "Add New Device", style = MaterialTheme.typography.headlineLarge)
+        Text(text = "Add New Device", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
@@ -36,17 +41,16 @@ fun AddDeviceScreen(onAddDevice: (SmartDevice) -> Unit, onCancel: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = type,
-            onValueChange = { type = it },
-            label = { Text("Device Type") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+        DeviceTypeDropdown(type, onTypeSelected = { type = it })
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row {
             Button(onClick = {
-                val newDevice = SmartDevice(id = (0..1000).random(), name = name, type = type, status = false)
+                val newDevice: SmartDevice = when (type) {
+                    DeviceType.LIGHT -> LightDevice(name = name)
+                    DeviceType.THERMOSTAT -> ThermostatDevice(name = name)
+                    DeviceType.CAMERA -> CameraDevice(name = name)
+                }
                 onAddDevice(newDevice)
             }, modifier = Modifier.weight(1f)) {
                 Text(text = "Add Device")
@@ -58,3 +62,4 @@ fun AddDeviceScreen(onAddDevice: (SmartDevice) -> Unit, onCancel: () -> Unit) {
         }
     }
 }
+

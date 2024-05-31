@@ -1,10 +1,11 @@
-package com.anyarusova.smarthouse
+package com.anyarusova.smarthouse.infrastracture
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.anyarusova.smarthouse.model.SmartDevice
 
 @Dao
 interface SmartDeviceDao {

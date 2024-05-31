@@ -1,4 +1,4 @@
-package com.anyarusova.smarthouse
+package com.anyarusova.smarthouse.ui.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.anyarusova.smarthouse.model.SmartDevice
 
 @Composable
 fun DeviceList(
@@ -32,7 +33,7 @@ fun DeviceList(
             ) {
                 Column {
                     Text(text = device.name, style = MaterialTheme.typography.headlineMedium)
-                    Text(text = device.type, style = MaterialTheme.typography.bodyMedium)
+                    Text(text = device.type.toString(), style = MaterialTheme.typography.bodyMedium)
                 }
                 Switch(
                     checked = device.status,

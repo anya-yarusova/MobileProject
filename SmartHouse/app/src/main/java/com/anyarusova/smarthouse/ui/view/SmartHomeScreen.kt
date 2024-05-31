@@ -1,4 +1,4 @@
-package com.anyarusova.smarthouse
+package com.anyarusova.smarthouse.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,13 +16,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.anyarusova.smarthouse.model.SmartDevice
+import com.anyarusova.smarthouse.viewmodel.SmartHomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun SmartHomeScreen(viewModel: SmartHomeViewModel) {
     var selectedDevice by remember { mutableStateOf<SmartDevice?>(null) }
     var isAddingDevice by remember { mutableStateOf(false) }
-    var isEditingDevice by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -36,26 +37,23 @@ fun SmartHomeScreen(viewModel: SmartHomeViewModel) {
             },
             onCancel = { isAddingDevice = false }
         )
-    } else if (selectedDevice != null && isEditingDevice) {
+    } else if (selectedDevice != null) {
         EditDeviceScreen(
             device = selectedDevice!!,
             onEditDevice = { device ->
                 coroutineScope.launch {
                     viewModel.editDevice(device)
                     selectedDevice = null
-                    isEditingDevice = false
                 }
             },
             onDeleteDevice = { device ->
                 coroutineScope.launch {
                     viewModel.removeDevice(device)
                     selectedDevice = null
-                    isEditingDevice = false
                 }
             },
             onCancel = {
                 selectedDevice = null
-                isEditingDevice = false
             }
         )
     } else {
@@ -64,11 +62,11 @@ fun SmartHomeScreen(viewModel: SmartHomeViewModel) {
                 devices = viewModel.devices,
                 onEditDevice = { device ->
                     selectedDevice = device
-                    isEditingDevice = true
                 },
                 onToggleDeviceStatus = { device ->
                     coroutineScope.launch {
-                        val updatedDevice = device.copy(status = !device.status)
+                        val updatedDevice =
+                            SmartDevice(device.id, device.name, device.type, !device.status);
                         viewModel.editDevice(updatedDevice)
                     }
                 }
